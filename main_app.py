@@ -816,7 +816,6 @@ class ComChecklist(tk.Frame):
             self.listbox.column("# 8", stretch=NO, anchor=CENTER, width=120)
             self.listbox.column("# 9", stretch=NO, anchor=CENTER, width=120)
             self.listbox.column("# 10", stretch=NO, anchor=CENTER, width=250)
-
             for col in columns:
                 self.listbox.heading(col, text=col)
                 self.listbox.pack(fill='both', expand=True)
@@ -909,9 +908,6 @@ class ComChecklist(tk.Frame):
         acquired_date_label.place(x=750, y=10)
         expiry_date_label = Label(supplier_add_frame, text="Expiry Date")
         expiry_date_label.place(x=850, y=10)
-
-
-
 
         # add ID column at mysql db with auto increment primary key
         # try:
