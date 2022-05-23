@@ -23,13 +23,13 @@ class DataBase(tk.Tk):
         container = tk.Frame(self, bg=GREEN)
         container.place(x=0, y=0, width=1360, height=730)
         self.frames = {}
-        for F in (RegPage, MainPage, HazInventory, HazPullout, ComChecklist, ChemicalInventory):
+        for F in (RegistrationPage, MainPage, HazInventory, HazardousEntrywindow, HazPullout, ComChecklist, ChemicalInventory):
             page_name = F.__name__
             frame = F(parent=container, controller=self)
             self.frames[page_name] = frame
             frame.place(x=0, y=0, width=1360, height=730)
 
-        self.show_frame("RegPage")
+        self.show_frame("RegistrationPage")
 
     def show_frame(self, page_name):
         """show the frame that was raised"""
@@ -96,11 +96,11 @@ class MainPage(tk.Frame):
         self.chemical_canvas.create_image(2, 2, anchor=NW, image=self.chemical_new_img)
 
         registration_btn = tk.Button(self, text="LOGIN", width=15, bg=BLUE, borderwidth=0,
-                                     command=lambda: DataBase.show_frame(self.controller, "RegPage"))
+                                     command=lambda: DataBase.show_frame(self.controller, "RegistrationPage"))
         registration_btn.place(x=1100, y=450)
 
 
-class RegPage(tk.Frame):
+class RegistrationPage(tk.Frame):
 
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent, bg="#F9F7F7")
@@ -298,63 +298,6 @@ class HazInventory(tk.Frame):
         # delete typed filter
         self.filter_entry.delete(0, END)
 
-# create new window for hazardous waste inputs
-    def top_inventory(self):
-        self.new = Toplevel(self)
-        self.new.geometry("700x550")
-        self.new.title("Add Information!")
-
-        self.menu = StringVar()
-        self.mon = StringVar()
-        self.waste = StringVar()
-
-        self.menu.set("Select")
-        self.mon.set("Select")
-        self.waste.set("Select")
-
-        sec_label = Label(self.new, text="Section")
-        sec_label.place(x=30, y=50)
-        self.sec_menu = OptionMenu(self.new, self.menu, "CCD", "CWP", "SWP", "PWS", "POC", "CCI")
-        self.sec_menu.place(x=160, y=50)
-        self.sec_menu.config(width=15)
-
-        waste_label = Label(self.new, text="Waste Type")
-        waste_label.place(x=30, y=100)
-        self.waste_menu = OptionMenu(self.new, self.waste, "A101", "B299", "C399", "D402", "D407", "F604", "G703",
-                                     "G704", "I101", "I104", "J201", "K301")
-        self.waste_menu.place(x=160, y=100)
-        self.waste_menu.config(width=15)
-
-        mon_label = Label(self.new, text="Monitored By")
-        mon_label.place(x=30, y=150)
-        self.mon_menu = OptionMenu(self.new, self.mon, "Miguelito Baguio", "Branley Basubas")
-        self.mon_menu.place(x=160, y=150)
-        self.mon_menu.config(width=15)
-
-        cont_label = Label(self.new, text="Type of Container")
-        cont_label.place(x=30, y=200)
-        self.cont_entry = Entry(self.new, width=20)
-        self.cont_entry.place(x=160, y=200)
-
-        date_label = Label(self.new, text="Date")
-        date_label.place(x=30, y=250)
-        self.cal = DateEntry(self.new, width=17, selectmode="day", year=2022, month=4, day=7)
-        self.cal.place(x=160, y=250)
-
-        in_label = Label(self.new, text="Volume Input")
-        in_label.place(x=30, y=300)
-        self.in_entry = Entry(self.new, width=20)
-        self.in_entry.place(x=160, y=300)
-
-        out_label = Label(self.new, text="Volume Out")
-        out_label.place(x=30, y=350)
-        self.out_entry = Entry(self.new, width=20)
-        self.out_entry.place(x=160, y=350)
-
-        self.confirm_btn = Button(self.new, text="Confirm", width=10, command=self.add_inv)
-        self.confirm_btn.place(x=30, y=450)
-        self.cancel_btn = Button(self.new, text="Cancel", width=10, command=self.cancel)
-        self.cancel_btn.place(x=150, y=450)
 
     # add entry at mysql
     def add_inv(self):
@@ -401,7 +344,7 @@ class HazInventory(tk.Frame):
         self.menu_click.add_command(label="Filter", command=self.filter_haz_treeview)
         self.menu_click.add_separator()
         self.menu_click.add_command(label="Exit", command=self.exit_menu)
-        
+     
         self.listbox.bind("<Button-3>", self.menu_event)
 
     def edit_haz_treeview(self):
@@ -539,6 +482,65 @@ class HazInventory(tk.Frame):
             w = csv.writer(f, dialect="excel")
             for record in mysql_data:
                 w.writerow(record)
+
+                
+# create new window for hazardous waste inputs
+class HazardousEntrywindow(tk.Frame):
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent, bg=LIGHT_BLUE)
+        self.controller = controller
+        # string variable for option menu
+        self.menu = StringVar()
+        self.mon = StringVar()
+        self.waste = StringVar()
+
+        self.menu.set("Select")
+        self.mon.set("Select")
+        self.waste.set("Select")
+
+        sec_label = Label(self, text="Section")
+        sec_label.place(x=30, y=50)
+        self.sec_menu = OptionMenu(self, self.menu, "CCD", "CWP", "SWP", "PWS", "POC", "CCI")
+        self.sec_menu.place(x=160, y=50)
+        self.sec_menu.config(width=15)
+
+        waste_label = Label(self, text="Waste Type")
+        waste_label.place(x=30, y=100)
+        self.waste_menu = OptionMenu(self, self.waste, "A101", "B299", "C399", "D402", "D407", "F604", "G703",
+                                     "G704", "I101", "I104", "J201", "K301")
+        self.waste_menu.place(x=160, y=100)
+        self.waste_menu.config(width=15)
+
+        mon_label = Label(self, text="Monitored By")
+        mon_label.place(x=30, y=150)
+        self.mon_menu = OptionMenu(self, self.mon, "Miguelito Baguio", "Branley Basubas")
+        self.mon_menu.place(x=160, y=150)
+        self.mon_menu.config(width=15)
+
+        cont_label = Label(self, text="Type of Container")
+        cont_label.place(x=30, y=200)
+        self.cont_entry = Entry(self, width=20)
+        self.cont_entry.place(x=160, y=200)
+
+        date_label = Label(self, text="Date")
+        date_label.place(x=30, y=250)
+        self.cal = DateEntry(self, width=17, selectmode="day", year=2022, month=4, day=7)
+        self.cal.place(x=160, y=250)
+
+        in_label = Label(self, text="Volume Input")
+        in_label.place(x=30, y=300)
+        self.in_entry = Entry(self, width=20)
+        self.in_entry.place(x=160, y=300)
+
+        out_label = Label(self, text="Volume Out")
+        out_label.place(x=30, y=350)
+        self.out_entry = Entry(self, width=20)
+        self.out_entry.place(x=160, y=350)
+
+        self.confirm_btn = Button(self, text="Confirm", width=10, command=self.add_inv)
+        self.confirm_btn.place(x=30, y=450)
+        self.cancel_btn = Button(self, text="Cancel", width=10, command=self.cancel)
+        self.cancel_btn.place(x=150, y=450)
 
 
 class HazPullout(tk.Frame):
